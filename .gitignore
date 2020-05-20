@@ -1,0 +1,14 @@
+#
+tienda/applications/home/migrations/*
+#
+tienda/applications/users/migrations/*
+
+# Visual Studio Code # 
+.vscode/* 
+!.vscode/settings.json 
+!.vscode/tasks.json 
+!.vscode/launch.json 
+!.vscode/extensions.json 
+.history
+
+tienda/secret.json
