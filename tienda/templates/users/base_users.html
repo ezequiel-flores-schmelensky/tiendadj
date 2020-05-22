@@ -18,7 +18,8 @@
   <!-- Add Firebase products that you want to use -->
   <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-firestore.js"></script>
-
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  
   <script>
     
     function login() {
@@ -51,6 +52,12 @@
                 user.getIdToken().then(
                   function(idToken) {
                     console.log(idToken)
+                    var data = {'token_id': idToken}
+                    axios.post('/api/google-login/', data).then(
+                      function(response) {
+                        console.log(response);
+                      }
+                    )
                   }
                 ).catch(function(error) {
                   // Handle error
