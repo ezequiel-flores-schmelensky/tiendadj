@@ -1,4 +1,6 @@
 from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
 from firebase_admin import auth
 from django.shortcuts import render
 # Create your views here.
@@ -29,4 +31,23 @@ class GoogleLoginView(APIView):
                 'is_active': True
             }
         )
-        return None
+        if created:
+            token = Token.objects.create(user=usuario)
+        else:
+            token = Token.objects.get(user=usuario)
+
+        userGet = {
+            'id': usuario.pk,
+            'email': usuario.email,
+            'full_name': usuario.full_name,
+            'genero': usuario.genero,
+            'date_birth': usuario.date_birth,
+            'city': usuario.city
+        }
+
+        return Response(
+            {
+                'token': token.key,
+                'user': userGet
+            }
+        )

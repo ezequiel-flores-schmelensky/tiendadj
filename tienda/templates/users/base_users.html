@@ -47,6 +47,15 @@
                 console.log(user)
                 console.log(result.credencial)
                 console.log(token)
+                // recupera id token user
+                user.getIdToken().then(
+                  function(idToken) {
+                    console.log(idToken)
+                  }
+                ).catch(function(error) {
+                  // Handle error
+                  }
+                )
                 // ...
             }).catch(function(error) {
                 // Handle Errors here.
