@@ -28,5 +28,5 @@ STATICFILES_DIRS = [BASE_DIR.child('static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR.child('media')
 
-cred = credentials.RefreshToken('fbkey.json')
-default_app = firebase_admin.initialize_app(cred)
+cred = credentials.Certificate("fbkey.json")
+firebase_admin.initialize_app(cred)

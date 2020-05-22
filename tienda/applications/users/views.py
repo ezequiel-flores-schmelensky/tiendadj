@@ -4,7 +4,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.views.generic import TemplateView
 from .serializers import LoginSocialSerializer
-from .models import Users
+from .models import User
 
 class LoginUser(TemplateView):
     template_name = "users/login.html"
