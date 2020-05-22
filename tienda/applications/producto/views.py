@@ -16,4 +16,5 @@ class ListProductUser(ListAPIView):
     def get_queryset(self):
         print('*************')
         usuario = self.request.user
+        print(usuario)
         return Product.objects.productos_por_user(usuario)
