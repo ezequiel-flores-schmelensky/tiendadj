@@ -34,4 +34,20 @@ class ListProductGenero(ListAPIView):
     
     def get_queryset(self):
         genero = self.kwargs['gender']
-        return Product.objects.productos_por_genero('m')
+        return Product.objects.productos_por_genero(genero)
+
+
+class FiltrarProductos(ListAPIView):
+    serializer_class = ProductoSerializer
+    def get_queryset(self):
+        varon = self.request.query_params.get('man', None)
+        mujer = self.request.query_params.get('woman', None)
+        nombre = self.request.query_params.get('name', None)
+        #print(varon)
+        #print(mujer)
+        #print(nombre)
+        return Product.objects.filtrar_productos(
+            man=varon,
+            woman=mujer,
+            name=nombre
+        )

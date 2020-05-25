@@ -29,3 +29,10 @@ class ProductManager(models.Manager):
             woman=mujer,
             man=varon
         ).order_by('created')
+
+    def filtrar_productos(self, **filtros):
+        return self.filter(
+            man=filtros['man'],
+            woman=filtros['man'],
+            name__icontains=filtros['name']
+        )
