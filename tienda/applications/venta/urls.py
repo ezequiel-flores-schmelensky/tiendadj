@@ -9,5 +9,4 @@ urlpatterns = [
         views.ReporteVentasList.as_view(),
         name='venta-reporte'
     ),
-
 ]
