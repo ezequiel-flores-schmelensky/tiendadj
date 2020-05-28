@@ -40,3 +40,19 @@ class DetalleVentaProductoSerializer(serializers.ModelSerializer):
             'price_purchase',
             'price_sale',
         )
+
+
+class ProductDetailSerializers(serializers.Serializer):
+
+    pk = serializers.IntegerField()
+    count = serializers.IntegerField()
+
+
+class ProcesoVentaSerializer(serializers.Serializer):
+
+    type_invoce = serializers.CharField()
+    type_payment = serializers.CharField()
+    adreese_send = serializers.CharField()
+    productos = ProductDetailSerializers(many=True)
+
+

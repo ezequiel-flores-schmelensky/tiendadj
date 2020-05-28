@@ -9,4 +9,9 @@ urlpatterns = [
         views.ReporteVentasList.as_view(),
         name='venta-reporte'
     ),
+    path(
+        'api/venta/create/',
+        views.RegistrarVenta.as_view(),
+        name='venta-register'
+    ),
 ]
