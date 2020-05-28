@@ -1,7 +1,8 @@
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from applications.producto.models import Product
 from .serializers import ProcesoVentaSerializer2, VentaReporteSerializers
@@ -9,10 +10,18 @@ from .models import Sale, SaleDetail
 
 
 class VentasViewSet(viewsets.ViewSet):
-    #authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,)
     #permission_classes = [IsAuthenticated]
     #serializer_class = VentaReporteSerializers
     queryset = Sale.objects.all()
+
+    def get_permissions(self):
+        if (self.action == 'list') or (self.action == 'retrieve'):
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+
+        return [permission() for permission in permission_classes]
 
     #Cuando se trabaje con view set se necesita redefinir los metodos list, retrive, etc...
     def list(self, request,*args, **kwargs):
@@ -58,8 +67,9 @@ class VentasViewSet(viewsets.ViewSet):
         SaleDetail.objects.bulk_create(ventas_detalle)
         return Response({'msj':'venta exitosa'})
 
-    def retrive(self, request, pk=None):
-        venta = Sale.objects.get(id=pk)
+    def retrieve(self, request, pk=None):
+        #venta = Sale.objects.get(id=pk)
+        venta = get_object_or_404(Sale.objects.all(), pk=pk) 
         serializer = VentaReporteSerializers(venta)
         #print('************')
         return Response(serializer.data)
