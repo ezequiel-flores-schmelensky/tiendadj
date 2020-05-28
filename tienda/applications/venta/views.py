@@ -9,7 +9,11 @@ from rest_framework.generics import (
 )
 from applications.producto.models import Product
 from .models import Sale, SaleDetail
-from .serializers import VentaReporteSerializers, ProcesoVentaSerializer
+from .serializers import (
+    VentaReporteSerializers, 
+    ProcesoVentaSerializer,
+    ProcesoVentaSerializer2
+)
 
 
 class ReporteVentasList(ListAPIView):
@@ -29,6 +33,57 @@ class RegistrarVenta(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = ProcesoVentaSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        venta = Sale.objects.create (
+            date_sale = timezone.now(),
+            amount = 0,
+            count = 0,
+            type_invoce = serializer.validated_data['type_invoce'],
+            type_payment = serializer.validated_data['type_payment'],
+            adreese_send = serializer.validated_data['adreese_send'],
+            user = self.request.user,
+        )
+
+        amount = 0
+        count = 0
+
+        productos = Product.objects.filter(
+            id__in = serializer.validated_data['productos']
+        )
+
+        cantidades = serializer.validated_data['cantidades']
+
+        ventas_detalle = []
+
+        for producto, cantidad in zip(productos, cantidades):
+            
+            venta_detalle = SaleDetail(
+                sale=venta,
+                product=producto,
+                count=cantidad,
+                price_purchase=producto.price_purchase,
+                price_sale=producto.price_sale,
+            )
+            amount = amount + producto.price_sale*cantidad
+            count = count + cantidad
+            ventas_detalle.append(venta_detalle)
+
+        venta.amount = amount
+        venta.count = count
+        venta.save()
+        SaleDetail.objects.bulk_create(ventas_detalle)
+        return Response({'msj':'venta exitosa'})
+
+
+class RegistrarVenta2(CreateAPIView):
+
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = [IsAuthenticated]
+    serializer_class = ProcesoVentaSerializer2
+
+    def create(self, request, *args, **kwargs):
+        serializer = ProcesoVentaSerializer2(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         venta = Sale.objects.create (
