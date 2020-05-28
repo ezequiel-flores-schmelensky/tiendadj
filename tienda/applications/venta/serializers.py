@@ -69,4 +69,13 @@ class ProcesoVentaSerializer2(serializers.Serializer):
     productos = ArrayIntegerSerializer()
     cantidades = ArrayIntegerSerializer()
 
+    def validate(self, data):
+        if data['type_payment'] != '0':
+            raise serializers.ValidationError('ingrese un tipo de pago correcto')
 
+        return data
+
+    def validate_type_invoce(self, value):
+        if value != '0':
+            raise serializers.ValidationError('ingrese un valor correcto')
+        return value
